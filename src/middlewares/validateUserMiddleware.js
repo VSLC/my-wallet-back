@@ -1,39 +1,48 @@
-import joi from 'joi'
+import joi from "joi"
+import db from "../db.js"
 
-const validateUserSignIn = (req, res, next) => {
-    const { email, password } = req.body;
+const validateMoney = (req, res, next) => {
+    const { value, description, currentDay, type } = req.body;
 
-    const userSchema = joi.object({
-        email: joi.string().required().email(),
-        password: joi.string().required().min(8)
-    });
-    const validation = userSchema.validate({ email, password }, { abortEarly: false });
+    const moneyInSchema = joi.object({
+        value: joi.number().required().min(1),
+        description: joi.string().required().min(1),
+        type: joi.string().valid('deposit', 'withdraw')
+    })
 
+    const validation = moneyInSchema.validate({ value, description, type }, { abortEarly: false });
     if (validation.error) {
         res.sendStatus(422);
-        return;
-    }
-
-    next();
-
-}
-
-const validateUserSignUp = (req, res, next) => {
-    const { name, email, password, confirmPassword } = req.body;
-
-    const userSchema = joi.object({
-        name: joi.string().required().min(1),
-        email: joi.string().required().email(),
-        password: joi.string().required().min(8),
-        confirmPassword: joi.ref("password")
-    });
-    const validation = userSchema.validate({ name, email, password, confirmPassword }, { abortEarly: false });
-    if (validation.error) {
-        console.log(validation.error.details)
-        res.sendStatus(422);
-        return;
     }
     next();
 }
 
-export { validateUserSignUp, validateUserSignIn }
+const validateToken = async (req, res, next) => {
+
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+        res.sendStatus(401)
+    }
+    const sessions = await db.collection('sessions').findOne({ token })
+
+    if (!sessions) {
+        res.sendStatus(401);
+        return;
+    }
+
+    console.log("validou sessions")
+
+    const user = await db.collection('users').findOne({
+        _id: sessions.userId
+    })
+
+    if (!user) {
+        res.sendStatus(401);
+    }
+
+    res.locals.user = user;
+
+    next();
+}
+
+export { validateMoney, validateToken }

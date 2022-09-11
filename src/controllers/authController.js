@@ -8,7 +8,7 @@ const signUp = async (req, res) => {
 
     try {
         const passwordHash = bcrypt.hashSync(password, 10);
-        const response = await db.collection("users").insert({ name, email, password: passwordHash });
+        const response = await db.collection("users").insertOne({ name, email, password: passwordHash });
         console.log(response);
         res.sendStatus(202);
     } catch (error) {

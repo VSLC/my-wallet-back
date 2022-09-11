@@ -20,7 +20,7 @@ const moneyIn = async (req, res) => {
 
         const sessions = await db.collection('sessions').findOne({ token })
         if (!sessions) {
-            res.status(401);
+            res.sendStatus(401);
             return;
         }
 
@@ -55,13 +55,13 @@ const moneyOut = async (req, res) => {
 
         const validation = moneyInSchema.validate({ value, description, type }, { abortEarly: false });
         if (validation.error) {
-            res.status(422)
+            res.sendStatus(422)
         }
         console.log("Validou")
 
         const sessions = await db.collection('sessions').findOne({ token })
         if (!sessions) {
-            res.status(401);
+            res.sendStatus(401);
             return;
         }
 
@@ -90,7 +90,7 @@ const listBalance = async (req, res) => {
         const sessions = await db.collection('sessions').findOne({ token });
 
         if (!sessions) {
-            res.status(401);
+            res.sendStatus(401);
         }
 
         const user = await db.collection('users').findOne({
@@ -102,7 +102,7 @@ const listBalance = async (req, res) => {
 
         res.send(moneyBalance).status(201);
     } catch (error) {
-        res.status(501)
+        res.sendStatus(501)
     }
 }
 

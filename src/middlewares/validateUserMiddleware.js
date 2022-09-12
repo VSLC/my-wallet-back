@@ -13,6 +13,7 @@ const validateMoney = (req, res, next) => {
     const validation = moneyInSchema.validate({ value, description, type }, { abortEarly: false });
     if (validation.error) {
         res.sendStatus(422);
+        return;
     }
     next();
 }
@@ -20,9 +21,12 @@ const validateMoney = (req, res, next) => {
 const validateToken = async (req, res, next) => {
 
     const token = req.headers.authorization?.replace('Bearer ', '');
+
     if (!token) {
-        res.sendStatus(401)
+        res.sendStatus(401);
+        return;
     }
+
     const sessions = await db.collection('sessions').findOne({ token })
 
     if (!sessions) {
@@ -30,7 +34,6 @@ const validateToken = async (req, res, next) => {
         return;
     }
 
-    console.log("validou sessions")
 
     const user = await db.collection('users').findOne({
         _id: sessions.userId
@@ -38,6 +41,7 @@ const validateToken = async (req, res, next) => {
 
     if (!user) {
         res.sendStatus(401);
+        return;
     }
 
     res.locals.user = user;

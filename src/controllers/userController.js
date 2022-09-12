@@ -1,5 +1,4 @@
 import db from "../db.js"
-import joi from 'joi';
 
 const moneyIn = async (req, res) => {
     const { value, description, currentDay, type } = req.body;

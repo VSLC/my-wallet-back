@@ -20,6 +20,7 @@ const validateUserSignIn = (req, res, next) => {
 
 const validateUserSignUp = (req, res, next) => {
     const { name, email, password, confirmPassword } = req.body;
+    
 
     const userSchema = joi.object({
         name: joi.string().required().min(1),

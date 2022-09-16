@@ -4,9 +4,9 @@ const moneyIn = async (req, res) => {
     const { value, description, currentDay, type } = req.body;
     try {
 
-        console.log(await db.collection('moneyBalance').insertOne({
+        await db.collection('moneyBalance').insertOne({
             userId: res.locals.user._id, value, description, currentDay, type
-        }))
+        })
 
         res.sendStatus(202);
     } catch (error) {

@@ -10,10 +10,10 @@ const signUp = async (req, res) => {
         const passwordHash = bcrypt.hashSync(password, 10);
         const response = await db.collection("users").insertOne({ name, email, password: passwordHash });
         console.log(response);
-        res.sendStatus(202);
+        return res.sendStatus(202);
     } catch (error) {
         console.log(error);
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
@@ -38,13 +38,13 @@ const signIn = async (req, res) => {
             });
             delete user.password;
 
-            res.status(200).send(userInfo);
+            return res.status(200).send(userInfo);
 
         } else {
-            res.status(400);
+            return res.status(400);
         }
     } catch (error) {
-        res.status(500);
+        return res.status(500);
     }
 }
 

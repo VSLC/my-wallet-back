@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
-import authRouter from "./routes/authRouter.js"
-import userRouter from "./routes/userRouter.js"
+import authRouter from "./src/routes/authRouter.js"
+import userRouter from "./src/routes/userRouter.js"
 const server = express();
 const port = 5000;
 
